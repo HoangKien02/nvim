@@ -4,4 +4,9 @@
 -- Set to "solargraph" to use solargraph instead of ruby_lsp.
 vim.g.lazyvim_ruby_lsp = "ruby_lsp"
 vim.g.lazyvim_ruby_formatter = "rubocop"
--- Add any additional options here
+
+-- Disable netrw
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- vim.g.rout_folsVgc
