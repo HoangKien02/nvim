@@ -47,25 +47,46 @@ return {
     end,
   },
 
-  -- change some telescope options and a keymap to browse plugin files
+  -- change some telescope options and a keymap to browse plugin file
   {
     "nvim-telescope/telescope.nvim",
     keys = {
-      -- add a keymap to browse plugin files
-      -- stylua: ignore
+      -- browse plugin files
       {
         "<leader>fp",
-        function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
+        function()
+          require("telescope.builtin").find_files({
+            cwd = require("lazy.core.config").options.root,
+            hidden = true,    -- include dotfiles
+            no_ignore = true, -- include files ignored by .gitignore
+          })
+        end,
         desc = "Find Plugin File",
       },
+      -- find files including dotfiles in current project
+      {
+        "<leader>fa",
+        function()
+          require("telescope.builtin").find_files({
+            hidden = true,
+            no_ignore = true,
+          })
+        end,
+        desc = "Find All Files (incl. dotfiles)",
+      },
     },
-    -- change some options
     opts = {
       defaults = {
         layout_strategy = "horizontal",
         layout_config = { prompt_position = "top" },
         sorting_strategy = "ascending",
         winblend = 0,
+      },
+      pickers = {
+        find_files = {
+          hidden = true, -- make hidden the default
+          no_ignore = true,
+        },
       },
     },
   },
@@ -209,43 +230,43 @@ return {
       },
     },
   },
-  {
-    --- ~/.config/nvim/lua/plugins/snacks.nvim
-    "folke/snacks.nvim",
-    --- Updated this section to align with approach taken in other LazyVim snacks configs
-    ---@diagnostic disable-next-line: unused-local
-    opts = function(_, opts)
-      -- Credit for this section goes to exsesx
-      -- https://github.com/LazyVim/LazyVim/discussions/4232#discussioncomment-11191278
-      local snacks = require("snacks")
-      -- Check whether Copilot is installed
-      if pcall(require, "copilot") then
-        --- Workaround to keep track of state
-        vim.g.snacks_copilot_enabled = true
-        snacks
-            .toggle({
-              name = "Toggle (Copilot Completion)",
-              color = {
-                enabled = "azure",
-                disabled = "orange",
-              },
-              get = function()
-                return vim.g.snacks_copilot_enabled
-              end,
-              set = function(state)
-                if state then
-                  vim.g.snacks_copilot_enabled = true
-                  require("copilot.command").enable()
-                else
-                  vim.g.snacks_copilot_enabled = false
-                  require("copilot.command").disable()
-                end
-              end,
-            })
-            :map("<leader>at")
-      end
-    end,
-  },
+  -- {
+  --   --- ~/.config/nvim/lua/plugins/snacks.nvim
+  --   "folke/snacks.nvim",
+  --   --- Updated this section to align with approach taken in other LazyVim snacks configs
+  --   ---@diagnostic disable-next-line: unused-local
+  --   opts = function(_, opts)
+  --     -- Credit for this section goes to exsesx
+  --     -- https://github.com/LazyVim/LazyVim/discussions/4232#discussioncomment-11191278
+  --     local snacks = require("snacks")
+  --     -- Check whether Copilot is installed
+  --     if pcall(require, "copilot") then
+  --       --- Workaround to keep track of state
+  --       vim.g.snacks_copilot_enabled = true
+  --       snacks
+  --           .toggle({
+  --             name = "Toggle (Copilot Completion)",
+  --             color = {
+  --               enabled = "azure",
+  --               disabled = "orange",
+  --             },
+  --             get = function()
+  --               return vim.g.snacks_copilot_enabled
+  --             end,
+  --             set = function(state)
+  --               if state then
+  --                 vim.g.snacks_copilot_enabled = true
+  --                 require("copilot.command").enable()
+  --               else
+  --                 vim.g.snacks_copilot_enabled = false
+  --                 require("copilot.command").disable()
+  --               end
+  --             end,
+  --           })
+  --           :map("<leader>at")
+  --     end
+  --   end,
+  -- },
 
   {
     "f-person/git-blame.nvim",
@@ -465,7 +486,7 @@ return {
     end,
   },
   -- { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } }
-  
+
   -- Disable neo-tree auto-opening when opening a directory
   {
     "nvim-neo-tree/neo-tree.nvim",
